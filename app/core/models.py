@@ -17,13 +17,16 @@ class CustomUserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, email, date_of_birth, password=None):
+    def create_superuser(self, email, password=None, **extra_fields):
         """Creates and saves a new user"""
-        superuser = self.model(email=self.normalize_email(email), **extra_fields)
-        superuser.set_password(password)
-        superuser.save(using=self.db)
+        user = self.create_user(email, password)
 
-        return superuser
+        user.is_staff = True
+        user.is_superuser = True
+
+        user.save(using=self.db)
+        return user
+
 
 class User(AbstractBaseUser, PermissionsMixin):
 

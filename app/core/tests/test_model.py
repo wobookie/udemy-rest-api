@@ -21,10 +21,16 @@ class MyTestCase(django.test.TestCase):
         self.assertEqual(user.email, email.lower())
 
     def test_new_user_invalid_email(self):
-        """Test creating user with no email raises error"""
+        # Test creating user with no email raises error
         password = 'testpwd123'
         with self.assertRaises(ValueError):
-            user = User.objects.create_user(None, password=password)
+            User.objects.create_user(None, password=password)
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_create_new_superuser(self):
+        # Test creating a new superuser
+        email = 'test.superuser@mydomain.com'
+        password = 'testpwd123'
+        user = User.objects.create_superuser(email=email, password=password)
+
+        self.assertTrue(user.is_superuser)
+        self.assertTrue(user.is_staff)
