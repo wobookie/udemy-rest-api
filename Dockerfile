@@ -23,3 +23,5 @@ COPY ./app /app
 
 RUN adduser -D nautilus
 USER nautilus
+
+EXPOSE 8080
