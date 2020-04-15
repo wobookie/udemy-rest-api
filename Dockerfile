@@ -12,6 +12,9 @@ RUN apk add --no-cache --update --virtual .tmp-build-deps \
      libc-dev gcc linux-headers postgresql-dev
 
 COPY ./requirements.txt /requirements.txt
+COPY ./startserver.sh /startserver.sh
+RUN chmod 555 /startserver.sh
+
 RUN pip install -r requirements.txt
 
 # Remove temp dependencies
