@@ -22,8 +22,8 @@ class PublicUserApiTest(TestCase):
     def test_create_valid_user_success(self):
         # Test creating a user with valid payload
         payload = {
-            'email' : 'test@test.com',
-            'password' : 'mysecretpassword',
+            'email': 'test@test.com',
+            'password': 'mysecretpassword',
             'name': 'test-name, last'
         }
         res = self.client.post(CREATE_USER_URL, payload)
@@ -36,8 +36,8 @@ class PublicUserApiTest(TestCase):
     def test_user_exists(self):
         # Test creating user that exists fails
         payload = {
-            'email' : 'test@test.com',
-            'password' : 'mysecretpassword',
+            'email': 'test@test.com',
+            'password': 'mysecretpassword',
             'name': 'test-name, last'
         }
         create_user(**payload)
@@ -48,8 +48,8 @@ class PublicUserApiTest(TestCase):
     def test_password_too_short(self):
         # Test password meets length
         payload = {
-            'email' : 'test@test.com',
-            'password' : 'pw',
+            'email': 'test@test.com',
+            'password': 'pw',
             'name': 'test name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
@@ -61,8 +61,8 @@ class PublicUserApiTest(TestCase):
     def test_password_similar(self):
         # Test password meets length
         payload = {
-            'email' : 'test@test.com',
-            'password' : 'test_test_1',
+            'email': 'test@test.com',
+            'password': 'test_test_1',
             'name': 'test_test'
         }
         res = self.client.post(CREATE_USER_URL, payload)
