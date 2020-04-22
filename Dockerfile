@@ -4,7 +4,9 @@ MAINTAINER thiemo.heims@heims-family.com
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE app.settings
 
+# Install Postgres and Redis
 RUN apk add --no-cache --update postgresql-client
+RUN apk add --no-cache --update redis
 
 # Add build dependencies required to install postgres client
 # These are temporary dependencies and removed after requirements installed
@@ -27,4 +29,4 @@ COPY ./app /app
 RUN adduser -D nautilus
 USER nautilus
 
-EXPOSE 8080
+EXPOSE 8080 6379

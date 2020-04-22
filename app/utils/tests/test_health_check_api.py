@@ -20,17 +20,17 @@ class HealthCheckApiTest(TestCase):
     def test_health_check_success(self):
         res = self.client.get(HEALTH_CHECK_URL)
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data['status'], 'Ok')
-        self.assertEqual(res.data['app_id'], '01-01-01')
-        self.assertRegex(res.data['time'], DATE_REGEX)
+        self.assertEqual(status.HTTP_200_OK, res.status_code)
+        self.assertEqual('Ok', res.data['status'])
+        self.assertEqual('01-01-01', res.data['app_id'])
+        self.assertRegex(res.data['datetime'], DATE_REGEX)
 
-    @patch('redis.StrictRedis.hget', side_effect=[ConnectionError])
+    @patch('redis.StrictRedis.get', side_effect=[ConnectionError])
     def test_health_check_component_failed(self, redis):
 
         res = self.client.get(HEALTH_CHECK_URL)
 
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data['status'], 'Error')
-        self.assertEqual(res.data['app_id'], '01-01-01')
-        self.assertRegex(res.data['time'], DATE_REGEX)
+        self.assertEqual(status.HTTP_200_OK, res.status_code)
+        self.assertEqual('Error', res.data['status'])
+        self.assertEqual('01-01-01', res.data['app_id'])
+        self.assertRegex(res.data['datetime'], DATE_REGEX)

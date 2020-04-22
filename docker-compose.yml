@@ -1,5 +1,9 @@
 version: "3.7"
 
+networks:
+  app-tier:
+    driver: bridge
+
 services:
   app:
     build:
@@ -15,10 +19,16 @@ services:
       - DB_NAME=${DATABASE_NAME}
       - DB_USER=${DATABASE_ADMIN_USER}
       - DB_PASSWORD=${DATABASE_ADMIN_PASSWD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT}
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
     depends_on:
       - db
+      - redis
+    networks:
+      - app-tier
 
   db:
     image: postgres:12-alpine
@@ -27,3 +37,17 @@ services:
       - POSTGRES_DB=${DATABASE_NAME}
       - POSTGRES_USER=${DATABASE_ADMIN_USER}
       - POSTGRES_PASSWORD=${DATABASE_ADMIN_PASSWD}
+    networks:
+      - app-tier
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    restart: always
+    networks:
+      - app-tier
