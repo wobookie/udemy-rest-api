@@ -5,8 +5,13 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 
+import logging
 
-CREATE_USER_URL = reverse('user:create')
+CREATE_USER_URL = reverse('authentication:create')
+OBTAIN_TOKEN_URL = reverse('authentication:token_obtain')
+REFRESH_TOKEN_URL = reverse('authentication:token_refresh')
+
+LOGGER = logging.getLogger('unittest')
 
 
 def create_user(**params):
@@ -20,7 +25,7 @@ class PublicUserApiTest(TestCase):
         self.client = APIClient()
 
     def test_create_valid_user_success(self):
-        # Test creating a user with valid payload
+        # Test creating a authentication with valid payload
         payload = {
             'email': 'test@test.com',
             'password': 'mysecretpassword',
@@ -34,7 +39,7 @@ class PublicUserApiTest(TestCase):
         self.assertNotIn('password', res.data)
 
     def test_user_exists(self):
-        # Test creating user that exists fails
+        # Test creating authentication that exists fails
         payload = {
             'email': 'test@test.com',
             'password': 'mysecretpassword',
@@ -70,3 +75,41 @@ class PublicUserApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         user_exists = get_user_model().objects.filter(email=payload['email']).exists()
         self.assertFalse(user_exists)
+
+    def test_create_token_for_user(self):
+        # Test that a token is created for the authentication
+        payload = {
+            'email': 'test@test.com',
+            'password': 'p@ssphras3'
+        }
+        create_user(**payload)
+        res = self.client.post(OBTAIN_TOKEN_URL, payload)
+
+        self.assertIn('access', res.data)
+        self.assertIn('refresh', res.data)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    def test_create_token_invalid_credentials(self):
+        # Test that a token is not created if invalid credentials are given
+        create_user(email='test@test.com', password='p@ssphras3')
+        payload = {
+            'email': 'test@test.com',
+            'password': 'passphrase'
+        }
+        res = self.client.post(OBTAIN_TOKEN_URL, payload)
+
+        self.assertNotIn('token', res.data)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_token_no_user(self):
+        # Test that a token is not created if authentication does not exists
+        payload = {
+            'email': 'test@test.com',
+            'password': 'p@ssphras3'
+        }
+        res = self.client.post(OBTAIN_TOKEN_URL, payload)
+
+        self.assertNotIn('token', res.data)
+        self.assertNotIn('refresh', res.data)
+        self.assertEqual('No active account found with the given credentials', res.data['detail'])
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)

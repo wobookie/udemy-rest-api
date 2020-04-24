@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, \
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
-        """Creates and saves a new user"""
+        """Creates and saves a new authentication"""
         if not email:
             raise ValueError('Users must have email address')
 
@@ -18,7 +18,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Creates and saves a new user"""
+        """Creates and saves a new authentication"""
         user = self.create_user(email, password)
 
         user.is_staff = True

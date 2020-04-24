@@ -30,7 +30,7 @@ class UserAdmin(BaseUserAdmin):
     )
 
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
-    # overrides get_fieldsets to use this attribute when creating a user.
+    # overrides get_fieldsets to use this attribute when creating a authentication.
     add_fieldsets = (
         (None, {
             'classes': ('wide',),

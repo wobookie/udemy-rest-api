@@ -12,6 +12,7 @@ services:
       - "8080:8080"
     volumes:
       - ./app:/app
+      - ./app/logs:/logs
     command:
       - /startserver.sh
     environment:

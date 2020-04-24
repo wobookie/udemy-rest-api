@@ -1,33 +1,12 @@
 from django.contrib.auth import get_user_model, password_validation
-from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-        'OPTIONS': {
-            'user_attributes': ['name', 'email'],
-            'max_similarity': .7,
-        }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 5,
-        }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
 
 class UserSerializer(serializers.ModelSerializer):
-    # Serializer for the user object
+    # Serializer for the authentication object
 
     class Meta:
         model = get_user_model()
@@ -40,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def validate_password(self, data):
-        password_validators = password_validation.get_password_validators(AUTH_PASSWORD_VALIDATORS)
+        password_validators = password_validation.get_default_password_validators()
         password = data
 
         user = get_user_model()
@@ -56,5 +35,16 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        # Create a new user with encrypted password and return it
+        # Create a new authentication with encrypted password and return it
         return get_user_model().objects.create_user(**validated_data)
+
+
+class AuthTokenSerializer(serializers.Serializer):
+    # Serializer for the authentication authentication object
+    email = serializers.CharField()
+    password = serializers.CharField(style={'input_type': 'password'})
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+
