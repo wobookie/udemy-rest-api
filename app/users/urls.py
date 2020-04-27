@@ -1,10 +1,10 @@
 from django.urls import path
 
-from authentication import views as views
+from . import views as views
 from rest_framework_simplejwt import views as jwt_views
 
 
-app_name = 'authentication'
+app_name = 'users'
 
 urlpatterns = [
     path('create/', views.CreateUserView.as_view(), name='create'),

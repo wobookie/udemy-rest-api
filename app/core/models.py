@@ -6,20 +6,22 @@ from django.contrib.auth.models import AbstractBaseUser, \
 
 class CustomUserManager(BaseUserManager):
 
-    def create_user(self, email, password=None, **extra_fields):
-        """Creates and saves a new authentication"""
-        if not email:
-            raise ValueError('Users must have email address')
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        """Creates and saves a new users"""
+        if not username:
+            raise ValueError('Users must have user name')
 
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        user = self.model(name=username,
+                          email=self.normalize_email(email),
+                          **extra_fields)
         user.set_password(password)
         user.save(using=self.db)
 
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        """Creates and saves a new authentication"""
-        user = self.create_user(email, password)
+    def create_superuser(self, name, email=None, password=None, **extra_fields):
+        """Creates and saves a new users"""
+        user = self.create_user(name, email, password)
 
         user.is_staff = True
         user.is_superuser = True
@@ -30,11 +32,11 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'name'

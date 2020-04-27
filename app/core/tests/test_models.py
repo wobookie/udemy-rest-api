@@ -4,8 +4,8 @@ from core.models import User
 
 class MyTestCase(django.test.TestCase):
     def test_create_user_with_email_successful(self):
-        # Test creating a new authentication with email is successful
-        email = 'test.authentication@mydomain.com'
+        # Test creating a new users with email is successful
+        email = 'test.users@mydomain.com'
         password = 'testpwd123'
         user = User.objects.create_user(email=email, password=password)
 
@@ -14,14 +14,14 @@ class MyTestCase(django.test.TestCase):
 
     def test_new_user_email_normalized(self):
         # Test normalizing email is successful
-        email = 'test.authentication@MYDOMAIN.COM'
+        email = 'test.users@MYDOMAIN.COM'
         password = 'testpwd123'
         user = User.objects.create_user(email=email, password=password)
 
         self.assertEqual(user.email, email.lower())
 
     def test_new_user_invalid_email(self):
-        # Test creating authentication with no email raises error
+        # Test creating users with no email raises error
         password = 'testpwd123'
         with self.assertRaises(ValueError):
             User.objects.create_user(None, password=password)

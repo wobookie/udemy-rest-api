@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'core.apps.CoreConfig',
-    'authentication.apps.AuthenticationConfig',
+    'users.apps.UsersConfig',
     'utils.apps.UtilsConfig',
 ]
 
@@ -116,6 +116,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Authentication sources
+# https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#other-authentication-sources
+AUTHENTICATION_BACKENDS = [
+    'core.authentication.backends.LdapAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -186,7 +193,7 @@ LOGGING = {
             'file': {
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
-                'filename': '/logs/mylog.log',
+                'filename': '/logs/debug.log',
                 'formatter': 'verbose'
             },
             'console': {
@@ -196,13 +203,17 @@ LOGGING = {
                 'formatter': 'verbose'
             },
         },
+        'root': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
         'loggers': {
 
-            'unittest': {
+            'test_logger': {
                 'handlers': ['file', 'console'],
                 'level': 'DEBUG',
             },
-            'app': {
+            'app_logger': {
                 'handlers': ['file', 'console'],
                 'level': 'DEBUG',
             }
@@ -210,6 +221,12 @@ LOGGING = {
         }
     }
 
+# LDAP configuration
+JUMPCLOUD_URL = os.environ.get('JUMPCLOUD_URL')
+JUMPCLOUD_OID = os.environ.get('JUMPCLOUD_OID')
+JUMPCLOUD_DN = os.environ.get('JUMPCLOUD_DN')
+
 # User Model
 
 AUTH_USER_MODEL = 'core.User'
+

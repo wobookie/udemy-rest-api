@@ -7,9 +7,9 @@ from rest_framework import status
 
 import logging
 
-CREATE_USER_URL = reverse('authentication:create')
-OBTAIN_TOKEN_URL = reverse('authentication:token_obtain')
-REFRESH_TOKEN_URL = reverse('authentication:token_refresh')
+CREATE_USER_URL = reverse('users:create')
+OBTAIN_TOKEN_URL = reverse('users:token_obtain')
+REFRESH_TOKEN_URL = reverse('users:token_refresh')
 
 LOGGER = logging.getLogger('unittest')
 
@@ -25,11 +25,11 @@ class PublicUserApiTest(TestCase):
         self.client = APIClient()
 
     def test_create_valid_user_success(self):
-        # Test creating a authentication with valid payload
+        # Test creating a users with valid payload
         payload = {
             'email': 'test@test.com',
             'password': 'mysecretpassword',
-            'name': 'test-name, last'
+            'name': 'test.name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -39,11 +39,11 @@ class PublicUserApiTest(TestCase):
         self.assertNotIn('password', res.data)
 
     def test_user_exists(self):
-        # Test creating authentication that exists fails
+        # Test creating users that exists fails
         payload = {
             'email': 'test@test.com',
             'password': 'mysecretpassword',
-            'name': 'test-name, last'
+            'name': 'test.name'
         }
         create_user(**payload)
         res = self.client.post(CREATE_USER_URL, payload)
@@ -55,7 +55,7 @@ class PublicUserApiTest(TestCase):
         payload = {
             'email': 'test@test.com',
             'password': 'pw',
-            'name': 'test name'
+            'name': 'test.name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -68,7 +68,7 @@ class PublicUserApiTest(TestCase):
         payload = {
             'email': 'test@test.com',
             'password': 'test_test_1',
-            'name': 'test_test'
+            'name': 'test.name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -77,9 +77,9 @@ class PublicUserApiTest(TestCase):
         self.assertFalse(user_exists)
 
     def test_create_token_for_user(self):
-        # Test that a token is created for the authentication
+        # Test that a token is created for the users
         payload = {
-            'email': 'test@test.com',
+            'name': 'test.name',
             'password': 'p@ssphras3'
         }
         create_user(**payload)
@@ -91,9 +91,9 @@ class PublicUserApiTest(TestCase):
 
     def test_create_token_invalid_credentials(self):
         # Test that a token is not created if invalid credentials are given
-        create_user(email='test@test.com', password='p@ssphras3')
+        create_user(name='test.name', password='p@ssphras3')
         payload = {
-            'email': 'test@test.com',
+            'email': 'test.name',
             'password': 'passphrase'
         }
         res = self.client.post(OBTAIN_TOKEN_URL, payload)
@@ -102,9 +102,9 @@ class PublicUserApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_token_no_user(self):
-        # Test that a token is not created if authentication does not exists
+        # Test that a token is not created if users does not exists
         payload = {
-            'email': 'test@test.com',
+            'name': 'test.name',
             'password': 'p@ssphras3'
         }
         res = self.client.post(OBTAIN_TOKEN_URL, payload)

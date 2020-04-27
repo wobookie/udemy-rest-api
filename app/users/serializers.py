@@ -6,11 +6,11 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # Serializer for the authentication object
+    # Serializer for the users object
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password', 'name')
+        fields = ('username', 'email', 'password')
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = get_user_model()
         user.email = self.initial_data['email']
         user.password = password
-        user.name = self.initial_data['name']
+        user.username = self.initial_data['username']
 
         try:
             password_validation.validate_password(password=password, user=user, password_validators=password_validators)
@@ -35,12 +35,12 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        # Create a new authentication with encrypted password and return it
+        # Create a new users with encrypted password and return it
         return get_user_model().objects.create_user(**validated_data)
 
 
 class AuthTokenSerializer(serializers.Serializer):
-    # Serializer for the authentication authentication object
+    # Serializer for the users users object
     email = serializers.CharField()
     password = serializers.CharField(style={'input_type': 'password'})
 
