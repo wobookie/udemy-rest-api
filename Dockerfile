@@ -1,32 +1,49 @@
-FROM python:3.7-alpine
+FROM centos:8
 MAINTAINER thiemo.heims@heims-family.com
 
+# Exose ports for Django and Redis
+EXPOSE 8080 6379
+
+# Set environment for Python
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE app.settings
+ENV PYTHONIOENCODING utf-8
 
-# Install Postgres and Redis
-RUN apk add --no-cache --update postgresql-client
-RUN apk add --no-cache --update redis
+# Install Python3, Postgres Client 10 and Redis 5
+RUN dnf -y install python3
+RUN dnf -y install postgresql
+RUN dnf -y install redis
 
-# Add build dependencies required to install postgres client
+# Add build dependencies required to install Python PostgreSQL driver (Psycopg2)
 # These are temporary dependencies and removed after requirements installed
-RUN apk add --no-cache --update --virtual .tmp-build-deps \
-     libc-dev gcc linux-headers postgresql-dev
+RUN dnf -y install sudo gcc postgresql-devel python3-devel
 
-COPY ./requirements.txt /requirements.txt
+# Install application dependencies
+COPY ./requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt && \
+    rm requirements.txt
+
+# Clean Up installations
+RUN dnf -y remove gcc postgresql-devel python3-devel && \
+    dnf clean all && \
+    rm -f /etc/yum.repos.d/*.rpm; rm -fr /var/cache/*
+
+# Add an user under which the application should run
+# and grant him sudo permissions
+RUN useradd -ms /bin/bash nautilus && \
+    usermod -aG wheel,nautilus nautilus && \
+    echo 'nautilus ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
+# Create directory structure for the web app
+RUN mkdir -p /opt/nautilus/web-app/logs
 COPY ./startserver.sh /startserver.sh
-RUN chmod 555 /startserver.sh
+RUN chmod +x /startserver.sh
 
-RUN pip install -r requirements.txt
+COPY ./app /opt/nautilus/web-app
+RUN chown -R nautilus:nautilus /opt/nautilus
 
-# Remove temp dependencies
-RUN apk del .tmp-build-deps
-
-RUN mkdir /app
-WORKDIR /app
-COPY ./app /app
-
-RUN adduser -D nautilus
+# Set User to nautilus
 USER nautilus
 
-EXPOSE 8080 6379
+# Set the work directory
+WORKDIR /opt/nautilus/web-app
+

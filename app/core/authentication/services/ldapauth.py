@@ -1,5 +1,5 @@
 from ldap3 import Server, Connection, ALL
-from ldap3.core.exceptions import LDAPException
+from ldap3.core.exceptions import LDAPException, LDAPBindError
 from django.conf import settings
 from itertools import chain
 
@@ -10,17 +10,19 @@ logger = logging.getLogger('app_logger')
 # Check user users in the LDAP and return his information
 def get_ldap_user(username, password):
     ldap_url = settings.JUMPCLOUD_URL
+    logger.debug('ldap_url: %s', str(ldap_url))
     bind_dn = 'uid={username},{dn}'.format(
         username=username,
         dn=settings.JUMPCLOUD_DN
     )
 
+    ldap_server = Server(ldap_url, get_info=ALL, use_ssl=True)
+
     try:
-        ldap_server = Server(ldap_url, get_info=ALL, use_ssl=True)
-        logger.debug('ldap_server: %s', str(ldap_server))
         ldap_cnx = Connection(ldap_server, bind_dn, password, auto_bind=True)
-    except LDAPException as error:
-        logger.debug('LDAPException: %s', error)
+        logger.debug('LDAP bind successful !')
+    except LDAPBindError as error:
+        logger.debug('LDAP bind failed for %s with error %s !', bind_dn, error)
         raise LDAPException(error)
 
     # get user email from ldap - we allow for empty email

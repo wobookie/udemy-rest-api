@@ -183,6 +183,7 @@ SIMPLE_JWT = {
 LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
+        'propagate': False,
         'formatters': {
             'verbose': {
                 'format': "[%(asctime)s] %(levelname)s %(message)s",
@@ -193,7 +194,7 @@ LOGGING = {
             'file': {
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
-                'filename': '/logs/debug.log',
+                'filename': './logs/debug.log',
                 'formatter': 'verbose'
             },
             'console': {

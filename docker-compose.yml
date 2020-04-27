@@ -11,8 +11,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./app:/app
-      - ./app/logs:/logs
+      - ./app:/opt/nautilus/web-app
+      - ./app/logs:/opt/nautilus/web-app/logs
     command:
       - /startserver.sh
     environment:
@@ -35,7 +35,7 @@ services:
       - app-tier
 
   db:
-    image: postgres:12-alpine
+    image: "postgres:10"
     restart: always
     environment:
       - POSTGRES_DB=${DATABASE_NAME}
@@ -45,7 +45,7 @@ services:
       - app-tier
 
   redis:
-    image: "redis:alpine"
+    image: "redis:5"
     ports:
       - "6379:6379"
     environment:
