@@ -35,15 +35,18 @@ RUN useradd -ms /bin/bash nautilus && \
 
 # Create directory structure for the web app
 RUN mkdir -p /opt/nautilus/web-app/logs
+COPY ./startserver.sh /opt/nautilus/web-app/startserver.sh
+COPY ./app /opt/nautilus/web-app
+# Make startserver.sh runable
+RUN chown -R nautilus:nautilus /opt/nautilus
+
+# Workaround to start server - docker can't handle non-root directory as cmd entry points
 COPY ./startserver.sh /startserver.sh
 RUN chmod +x /startserver.sh
-
-COPY ./app /opt/nautilus/web-app
-RUN chown -R nautilus:nautilus /opt/nautilus
 
 # Set User to nautilus
 USER nautilus
 
 # Set the work directory
 WORKDIR /opt/nautilus/web-app
-
+RUN chmod +x ./startserver.sh
