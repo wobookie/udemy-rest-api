@@ -11,7 +11,7 @@ class CustomUserManager(BaseUserManager):
         if not username:
             raise ValueError('Users must have user name')
 
-        user = self.model(name=username,
+        user = self.model(username=username,
                           email=self.normalize_email(email),
                           **extra_fields)
         user.set_password(password)
@@ -19,9 +19,9 @@ class CustomUserManager(BaseUserManager):
 
         return user
 
-    def create_superuser(self, name, email=None, password=None, **extra_fields):
+    def create_superuser(self, username, email=None, password=None, **extra_fields):
         """Creates and saves a new users"""
-        user = self.create_user(name, email, password)
+        user = self.create_user(username, email, password)
 
         user.is_staff = True
         user.is_superuser = True
@@ -32,11 +32,11 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    name = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'name'
+    USERNAME_FIELD = 'username'

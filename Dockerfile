@@ -1,8 +1,8 @@
 FROM centos:8
 MAINTAINER thiemo.heims@heims-family.com
 
-# Exose ports for Django and Redis
-EXPOSE 8080 6379
+# Exose ports for Django, Redis and PostgreSQL
+EXPOSE 8080 6379 5432
 
 # Set environment for Python
 ENV PYTHONUNBUFFERED 1
@@ -28,6 +28,10 @@ RUN pip3 install -r requirements.txt && \
 RUN dnf -y remove gcc postgresql-devel python3-devel && \
     dnf clean all && \
     rm -f /etc/yum.repos.d/*.rpm; rm -fr /var/cache/*
+
+# PyCharm expect to find the python command in the system path
+# So we set the default Python Version (Unversioned Python Command)
+RUN alternatives --set python /usr/bin/python3
 
 # Add an user under which the application should run
 # and grant him sudo permissions

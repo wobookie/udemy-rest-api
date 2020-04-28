@@ -29,7 +29,7 @@ class PublicUserApiTest(TestCase):
         payload = {
             'email': 'test@test.com',
             'password': 'mysecretpassword',
-            'name': 'test.name'
+            'username': 'test.name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -43,7 +43,7 @@ class PublicUserApiTest(TestCase):
         payload = {
             'email': 'test@test.com',
             'password': 'mysecretpassword',
-            'name': 'test.name'
+            'username': 'test.name'
         }
         create_user(**payload)
         res = self.client.post(CREATE_USER_URL, payload)
@@ -55,7 +55,7 @@ class PublicUserApiTest(TestCase):
         payload = {
             'email': 'test@test.com',
             'password': 'pw',
-            'name': 'test.name'
+            'username': 'test.name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -67,8 +67,8 @@ class PublicUserApiTest(TestCase):
         # Test password meets length
         payload = {
             'email': 'test@test.com',
-            'password': 'test_test_1',
-            'name': 'test.name'
+            'password': 'test1.name',
+            'username': 'test.name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -79,7 +79,7 @@ class PublicUserApiTest(TestCase):
     def test_create_token_for_user(self):
         # Test that a token is created for the users
         payload = {
-            'name': 'test.name',
+            'username': 'test.name',
             'password': 'p@ssphras3'
         }
         create_user(**payload)
@@ -91,9 +91,9 @@ class PublicUserApiTest(TestCase):
 
     def test_create_token_invalid_credentials(self):
         # Test that a token is not created if invalid credentials are given
-        create_user(name='test.name', password='p@ssphras3')
+        create_user(username='test.name', password='p@ssphras3')
         payload = {
-            'email': 'test.name',
+            'username': 'test.name',
             'password': 'passphrase'
         }
         res = self.client.post(OBTAIN_TOKEN_URL, payload)
@@ -104,7 +104,7 @@ class PublicUserApiTest(TestCase):
     def test_create_token_no_user(self):
         # Test that a token is not created if users does not exists
         payload = {
-            'name': 'test.name',
+            'username': 'test.name',
             'password': 'p@ssphras3'
         }
         res = self.client.post(OBTAIN_TOKEN_URL, payload)

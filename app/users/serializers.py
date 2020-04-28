@@ -4,6 +4,9 @@ from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
+import logging
+
+logger = logging.getLogger('app_logger')
 
 class UserSerializer(serializers.ModelSerializer):
     # Serializer for the users object
@@ -20,6 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate_password(self, data):
         password_validators = password_validation.get_default_password_validators()
+
         password = data
 
         user = get_user_model()

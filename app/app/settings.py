@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'PORT': 5432,
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -97,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
         'OPTIONS': {
-            'user_attributes': ['name', 'email'],
+            'user_attributes': ['username'],
             'max_similarity': .7,
         }
     },

@@ -4,6 +4,8 @@ from django.core.management.base import BaseCommand
 from django.core.management.base import CommandError
 from django.core.management import call_command
 
+import logging
+logger = logging.getLogger('app_logger')
 
 class Command(BaseCommand):
     # Django command to start the server from PyCharm
@@ -22,11 +24,14 @@ class Command(BaseCommand):
             # Django uses argpass
             # Argpass converts '-' into '_'
             if options['create_admin_account']:
+                admin_user = os.environ.get('DJANGO_SUPERUSER_NAME')
+
                 try:
-                    call_command('createsuperuser', '--noinput')
-                    self.stdout.write('Admin account created...')
-                except CommandError:
-                    self.stdout.write('Could not create admin account, account might exists already. check logs for mor information...')
+                    call_command('createsuperuser', interactive=False, username=admin_user)
+                    logger.debug('Admin account created...')
+                except CommandError as error:
+                    logger.debug('Could not create admin account, account might exists already. check logs for mor information...')
+                    logger.debug('Error: ' + str(error))
                     pass
 
         call_command('runserver', options.get('host'))

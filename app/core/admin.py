@@ -9,14 +9,14 @@ from core import models
 class UserAdmin(BaseUserAdmin):
     # see https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
     ordering = ['id']
-    list_display = ['name', 'email']
+    list_display = ['username', 'email']
 
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     fieldsets = (
         (None, {
-            'fields': ('name', 'password')
+            'fields': ('username', 'password')
         }),
         (_('Personal Information'), {
             'fields': ('email',)
@@ -34,7 +34,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('name', 'password1', 'password2'),
+            'fields': ('username', 'password1', 'password2'),
         }),
     )
 

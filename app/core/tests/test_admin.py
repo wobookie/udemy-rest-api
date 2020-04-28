@@ -7,7 +7,7 @@ class AdminSiteTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.admin_user = User.objects.create_superuser(
-            name='admin',
+            username='admin',
             password='password123'
         )
         self.client.force_login(self.admin_user)
@@ -15,7 +15,7 @@ class AdminSiteTestCase(TestCase):
         self.user = User.objects.create_user(
             email='test.users@domain.com',
             password='password123',
-            name='test.name'
+            username='test.name'
         )
 
     def test_users_listed(self):
@@ -23,7 +23,7 @@ class AdminSiteTestCase(TestCase):
         url = reverse('admin:core_user_changelist')
         res = self.client.get(url)
 
-        self.assertContains(res, self.user.name)
+        self.assertContains(res, self.user.username)
         self.assertContains(res, self.user.email)
 
     def test_user_change_page(self):
