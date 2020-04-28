@@ -11,8 +11,9 @@ logger = logging.getLogger('app_logger')
 def get_ldap_user(username, password):
     ldap_url = settings.JUMPCLOUD_URL
     logger.debug('ldap_url: %s', str(ldap_url))
-    bind_dn = 'uid={username},{dn}'.format(
+    bind_dn = 'uid={username},ou={ou},{dn}'.format(
         username=username,
+        ou='Users',
         dn=settings.JUMPCLOUD_DN
     )
 

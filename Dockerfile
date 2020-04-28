@@ -13,9 +13,11 @@ RUN dnf -y install python3
 RUN dnf -y install postgresql
 RUN dnf -y install redis
 
-# Add build dependencies required to install Python PostgreSQL driver (Psycopg2)
+# Add some useful utilities and build dependencies
+# required to install Python PostgreSQL driver (Psycopg2)
 # These are temporary dependencies and removed after requirements installed
-RUN dnf -y install sudo gcc postgresql-devel python3-devel
+RUN dnf -y install sudo openldap-clients \
+    gcc postgresql-devel python3-devel
 
 # Install application dependencies
 COPY ./requirements.txt requirements.txt
