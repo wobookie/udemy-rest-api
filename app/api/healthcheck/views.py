@@ -12,6 +12,7 @@ REDIS_INSTANCE = redis.StrictRedis(
     charset='utf-8',
     db=0)
 
+
 @api_view()
 def health_check(request):
     dtime = datetime.now().isoformat(sep=' ', timespec='seconds')

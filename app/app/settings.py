@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
-    'utils.apps.UtilsConfig',
+    'api.healthcheck.apps.UtilsConfig',
 ]
 
 MIDDLEWARE = [

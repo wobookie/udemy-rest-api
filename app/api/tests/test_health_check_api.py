@@ -8,7 +8,7 @@ from rest_framework.reverse import reverse
 import redis
 from redis import ConnectionError
 
-HEALTH_CHECK_URL = reverse('utils:health-check')
+HEALTH_CHECK_URL = reverse('api:health-check')
 DATE_REGEX = '^(([0-9]{4})-([0-9]{2})-([0-9]{2}) (([0-9]{2}):([0-9]{2}):([0-9]{2})))?$'
 
 
