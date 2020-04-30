@@ -19,5 +19,6 @@ from .views import *
 app_name = 'web'
 
 urlpatterns = [
-    path('', home, name='homepage'),
+    path('', index, name='indexpage'),
+    path('web/home', home, name='homepage'),
 ]
