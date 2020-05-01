@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class UtilsConfig(AppConfig):
-    name = 'api'
+class HealthcheckConfig(AppConfig):
+    name = 'api.healthcheck'

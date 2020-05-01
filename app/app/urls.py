@@ -20,5 +20,5 @@ urlpatterns = [
     path('', include('web.urls', namespace='web')),
     path('admin/', admin.site.urls),
     path('api/auth/', include('users.urls', namespace='users')),
-    path('api/api/', include('api.healthcheck.urls', namespace='api')),
+    path('api/healthcheck/', include('api.healthcheck.urls', namespace='api_healthcheck')),
 ]

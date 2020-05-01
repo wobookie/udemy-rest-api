@@ -1,9 +1,9 @@
 from django.conf.urls import url
 
-from api.healthcheck import views
+from . import views
 
 urlpatterns = [
-    url('health-check/', views.health_check, name='health-check'),
+    url('', views.healthcheck, name='healthcheck'),
 ]
 
-app_name = 'api'
+app_name = 'api_healthcheck'

@@ -14,7 +14,7 @@ REDIS_INSTANCE = redis.StrictRedis(
 
 
 @api_view()
-def health_check(request):
+def healthcheck(request):
     dtime = datetime.now().isoformat(sep=' ', timespec='seconds')
 
     try:

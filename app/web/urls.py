@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.urls import path, include
 from .views import *
+from .settings.views import *
 
 app_name = 'web'
 
 urlpatterns = [
     path('', index, name='indexpage'),
-    path('web/home', home, name='homepage'),
+    path('web/home/', home, name='homepage'),
+    path('web/settings/tokens/', tokens, name='tokens'),
 ]

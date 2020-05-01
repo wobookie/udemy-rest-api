@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
-    'api.healthcheck.apps.UtilsConfig',
+    'api.healthcheck.apps.HealthcheckConfig',
+    'web.apps.WebConfig'
 ]
 
 MIDDLEWARE = [
