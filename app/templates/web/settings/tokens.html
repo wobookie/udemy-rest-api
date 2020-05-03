@@ -1,13 +1,59 @@
-{% extends "base.html" %}
+{% extends "web/base.html" %}
+
+{% block page-header %}
+{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-  <h1 class="display-3">{{ title }}</h1>
-  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-  <hr class="my-4">
-  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-  </p>
-</div>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Settings</a></li>
+        <li class="breadcrumb-item active">Token</li>
+    </ol>
+    <div>
+        <div class="card">
+            <div class="card-header container-fluid">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="w-75 p-0">Personal Access Tokens</h5>
+                    </div>
+                    <div class="col-md-2 float-right">
+                        <button type="button" class="btn btn-primary">Create Token</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Personal Access Tokens can be used instead of a password
+                    to allow applications access to Nautilus API. You can create as many
+                    personal access tokens as you like.</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Description</th>
+                            <th scope="col">Expiry</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">My Access Token 1</th>
+                            <td>Never</td>
+                            <td>Last used: <></td>
+                            <td>
+                                <button type="button" class="btn btn-danger">Revoke</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">My Access Token 1</th>
+                            <td>Never</td>
+                            <td>Last used: <></td>
+                            <td>
+                                <button type="button" class="btn btn-danger">Revoke</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

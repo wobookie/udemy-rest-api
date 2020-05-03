@@ -20,7 +20,7 @@ from .settings.views import *
 app_name = 'web'
 
 urlpatterns = [
-    path('', index, name='indexpage'),
-    path('web/home/', home, name='homepage'),
-    path('web/settings/tokens/', tokens, name='tokens'),
+    path('login/', login, name='login'),
+    path('home/', home, name='home'),
+    path('settings/tokens/', tokens, name='tokens'),
 ]

@@ -1,5 +1,4 @@
 FROM centos:8
-MAINTAINER thiemo.heims@heims-family.com
 
 # Exose ports for Django, Redis and PostgreSQL
 EXPOSE 8080 6379 5432
@@ -41,6 +40,7 @@ RUN useradd -ms /bin/bash nautilus && \
 
 # Create directory structure for the web app
 RUN mkdir -p /opt/nautilus/web-app/logs
+RUN mkdir -p /opt/nautilus/web-app/www/static
 COPY ./startserver.sh /opt/nautilus/web-app/startserver.sh
 COPY ./app /opt/nautilus/web-app
 # Make startserver.sh runable

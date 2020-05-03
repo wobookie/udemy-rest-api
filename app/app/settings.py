@@ -17,21 +17,18 @@ from datetime import timedelta
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'l0t_#5v$&6ta1lqkcn%90l4u#7(8#ezf0)u%^&(pcg_*@oy5)0'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,7 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
-    'api.healthcheck.apps.HealthcheckConfig',
+    'api.apps.ApiConfig',
     'web.apps.WebConfig'
 ]
 
@@ -76,10 +73,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -93,7 +88,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -116,45 +110,48 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Authentication sources
+# Authentication
+# https://docs.djangoproject.com/en/3.0/topics/auth/default/
 # https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#other-authentication-sources
 AUTHENTICATION_BACKENDS = [
     'core.authentication.backends.LdapAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+LOGIN_URL = 'web:login'
+
+# Session Management
+# https://docs.djangoproject.com/en/3.0/topics/http/sessions/#module-django.contrib.sessions
+SESSIONS = [
+    {
+        'SESSION_EXPIRE_AT_BROWSER_CLOSE' : True,
+        'SESSION_COOKIE_AGE' : 120,
+    }
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
-
 STATIC_URL = '/static/'
+# This is needed for a production deployment - static files need to be
+# served through a web server.
+STATIC_ROOT = os.path.join(BASE_DIR, 'www/static')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+    os.path.join(BASE_DIR, 'static')
 ]
-
 
 # Redis configuration
 REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = os.environ.get('REDIS_PORT')
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
 
-
 # Simple JWT’s behavior
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -183,7 +180,6 @@ SIMPLE_JWT = {
 
 
 # Logging
-
 LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
@@ -232,6 +228,5 @@ JUMPCLOUD_OID = os.environ.get('JUMPCLOUD_OID')
 JUMPCLOUD_DN = os.environ.get('JUMPCLOUD_DN')
 
 # User Model
-
 AUTH_USER_MODEL = 'core.User'
 

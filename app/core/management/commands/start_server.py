@@ -26,6 +26,7 @@ class Command(BaseCommand):
             if options['create_admin_account']:
                 admin_user = os.environ.get('DJANGO_SUPERUSER_NAME')
 
+                # create an admin user
                 try:
                     call_command('createsuperuser', interactive=False, username=admin_user)
                     logger.debug('Admin account created...')
@@ -33,5 +34,15 @@ class Command(BaseCommand):
                     logger.debug('Could not create admin account, account might exists already. check logs for mor information...')
                     logger.debug('Error: ' + str(error))
                     pass
+
+                # collect static files
+                try:
+                    call_command('collectstatic', interactive=False, clear=True, link=True)
+                    logger.debug('Statics collected...')
+                except CommandError as error:
+                    logger.debug('Could not collect static files...')
+                    logger.debug('Error: ' + str(error))
+                    pass
+
 
         call_command('runserver', options.get('host'))

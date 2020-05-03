@@ -13,17 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import re_path, path, include
-from .views import index
+from django.urls import path, include
+from .healthcheck.views import healthcheck
 
+app_name = 'api'
 
 urlpatterns = [
-    path('', index, name='index'),
-    re_path(r'^web/', include('web.urls', namespace='web')),
-    re_path(r'^api/', include('api.urls', namespace='api')),
-    path('admin/', admin.site.urls),
+    path('healthcheck/', healthcheck, name='api-healthcheck'),
+    path('auth/', include('users.urls', namespace='users')),
 ]
-
-# custom handle of 404 server error
-handler404 = 'web.views.handler_404'

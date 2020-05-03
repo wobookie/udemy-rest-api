@@ -1,13 +1,40 @@
-{% extends "base.html" %}
+{% extends "web/base.html" %}
+
+{% block navbar-items %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="settings">Settings<span class="caret"></span></a>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="/web/settings/tokens/">Access Token</a>
+    </div>
+</li>
+{% endblock %}
+
+{% block page-header %}
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>Nautilus</h1>
+                <p class="lead">The sound is deep in the dark</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 {% block content %}
 <div class="jumbotron">
-  <h1 class="display-3">{{ title }}</h1>
-  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-  <hr class="my-4">
-  <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-  <p class="lead">
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-  </p>
+    <h1 class="display-3">{{ title }}</h1>
+    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <hr class="my-4">
+    <p>
+        Show me, show me, show me how you do that trick
+        The one that makes me scream she said
+        The one that makes me laugh she said
+        Threw her arms around my neck
+        Show me how you do it and I'll promise you
+        I'll promise that I'll run away with you, I'll run away with you
+    </p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="{% url 'web:tokens' %}" role="button">Create an access token</a>
+    </p>
 </div>
 {% endblock %}
