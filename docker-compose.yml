@@ -6,6 +6,7 @@ networks:
 
 services:
   app:
+    user: ${APP_USER}
     build:
       context: .
     ports:
