@@ -5,14 +5,9 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 
-import logging
-
 CREATE_USER_URL = reverse('users:create')
 OBTAIN_TOKEN_URL = reverse('users:token_obtain')
 REFRESH_TOKEN_URL = reverse('users:token_refresh')
-
-LOGGER = logging.getLogger('unittest')
-
 
 def create_user(**params):
     return get_user_model().objects.create_user(**params)

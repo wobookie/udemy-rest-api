@@ -56,3 +56,4 @@ USER nautilus
 # Set the work directory
 WORKDIR /opt/nautilus/web-app
 RUN chmod +x ./startserver.sh
+RUN touch /opt/nautilus/web-app/logs/debug.log
