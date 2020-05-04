@@ -1,7 +1,7 @@
 FROM centos:8
 
 # Exose ports for Django, Redis and PostgreSQL
-EXPOSE 8080 6379 5432
+EXPOSE ${APP_PORT} ${REDIS_PORT} ${DATABASE_PORT}
 
 # Set environment for Python
 ENV PYTHONUNBUFFERED 1

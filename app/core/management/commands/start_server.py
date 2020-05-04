@@ -5,7 +5,7 @@ from django.core.management.base import CommandError
 from django.core.management import call_command
 
 import logging
-logger = logging.getLogger('app_logger')
+logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     # Django command to start the server from PyCharm
@@ -35,14 +35,16 @@ class Command(BaseCommand):
                     logger.debug('Error: ' + str(error))
                     pass
 
-                # collect static files
-                try:
-                    call_command('collectstatic', interactive=False, clear=True, link=True)
-                    logger.debug('Statics collected...')
-                except CommandError as error:
-                    logger.debug('Could not collect static files...')
-                    logger.debug('Error: ' + str(error))
-                    pass
+            # collect static files
+            try:
+                call_command('collectstatic', interactive=False, clear=True, link=True)
+                logger.debug('Statics collected...')
+            except CommandError as error:
+                logger.debug('Could not collect static files...')
+                logger.debug('Error: ' + str(error))
+                pass
 
-
-        call_command('runserver', options.get('host'))
+        if 'APP_ADRPORT' in os.environ:
+            call_command('runserver', addrport=os.environ.get('APP_ADRPORT'))
+        else:
+            call_command('runserver')

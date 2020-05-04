@@ -180,13 +180,14 @@ SIMPLE_JWT = {
 
 
 # Logging
-LOGGING = {
+if os.environ.get('ENVIRONMENT') != 'TRAVIS':
+    LOGLEVEL = os.environ.get('LOGLEVEL', 'debug').upper()
+    LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
-        'propagate': False,
         'formatters': {
             'verbose': {
-                'format': "[%(asctime)s] %(levelname)s %(message)s",
+                'format': '%(levelname)s - %(asctime)s - %(module)s - %(process)d - %(message)s',
                 'datefmt': "%d/%b/%Y %H:%M:%S"
             }
         },
@@ -204,21 +205,36 @@ LOGGING = {
                 'formatter': 'verbose'
             },
         },
-        'root': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-        },
         'loggers': {
-
-            'test_logger': {
-                'handlers': ['file', 'console'],
-                'level': 'DEBUG',
+            # root logger
+            '': {
+                'level': 'WARNING',
+                'handlers': ['console'],
             },
-            'app_logger': {
-                'handlers': ['file', 'console'],
-                'level': 'DEBUG',
-            }
-
+            'core': {
+                'level': LOGLEVEL,
+                'handlers': ['console', 'file'],
+                # required to avoid double logging with root logger
+                'propagate': False,
+            },
+            'api': {
+                'level': LOGLEVEL,
+                'handlers': ['console', 'file'],
+                # required to avoid double logging with root logger
+                'propagate': False,
+            },
+            'web': {
+                'level': LOGLEVEL,
+                'handlers': ['console', 'file'],
+                # required to avoid double logging with root logger
+                'propagate': False,
+            },
+            'unit-test': {
+                'level': LOGLEVEL,
+                'handlers': ['console'],
+                # required to avoid double logging with root logger
+                'propagate': False,
+            },
         }
     }
 
@@ -229,4 +245,3 @@ JUMPCLOUD_DN = os.environ.get('JUMPCLOUD_DN')
 
 # User Model
 AUTH_USER_MODEL = 'core.User'
-

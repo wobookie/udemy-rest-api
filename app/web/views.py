@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.views.defaults import page_not_found
 import logging
 
-logger = logging.getLogger('app_logger')
+logger = logging.getLogger('__name__')
 
 @login_required
 def home(request):

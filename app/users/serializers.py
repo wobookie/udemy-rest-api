@@ -5,8 +5,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 import logging
-
-logger = logging.getLogger('app_logger')
+logger = logging.getLogger(__name__)
 
 class UserSerializer(serializers.ModelSerializer):
     # Serializer for the users object

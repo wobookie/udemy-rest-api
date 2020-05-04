@@ -10,13 +10,17 @@ services:
     build:
       context: .
     ports:
-      - "8080:8080"
+      - "${APP_PORT}:${APP_PORT}"
+    expose:
+      - "${APP_PORT}"
     volumes:
       - ./app:/opt/nautilus/web-app
       - ./app/logs:/opt/nautilus/web-app/logs
     command:
       - /startserver.sh
     environment:
+      - APP_ADRPORT=0:${APP_PORT}
+      - ENVIRONMENT=${ENVIRONMENT}
       - DB_HOST=db
       - DB_NAME=${DATABASE_NAME}
       - DB_USER=${DATABASE_ADMIN_USER}
@@ -51,7 +55,7 @@ services:
   redis:
     image: "redis:5"
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:${REDIS_PORT}"
     environment:
       - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=${REDIS_PASSWORD}

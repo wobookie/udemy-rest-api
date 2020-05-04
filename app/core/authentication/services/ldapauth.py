@@ -4,7 +4,7 @@ from django.conf import settings
 from itertools import chain
 
 import logging
-logger = logging.getLogger('app_logger')
+logger = logging.getLogger(__name__)
 
 # Check user users in the LDAP and return his information
 def get_ldap_user(username, password):

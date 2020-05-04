@@ -6,8 +6,7 @@ from ldap3.core.exceptions import LDAPException
 from .services.ldapauth import get_ldap_user
 
 import logging
-
-logger = logging.getLogger('app_logger')
+logger = logging.getLogger(__name__)
 
 
 class LdapAuthenticationBackend(BaseBackend):
