@@ -13,9 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, include
-from .views import *
-from .settings.views import *
+from django.urls import path
+from .views import login, home
+from .settings.views import tokens
 
 app_name = 'web'
 

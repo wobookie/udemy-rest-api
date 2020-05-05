@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
+
 
 @login_required
 def tokens(request):
@@ -8,6 +9,5 @@ def tokens(request):
     context = {
         'title': 'Hello World!',
     }
-
 
     return render(request, template_name=template, context=context)

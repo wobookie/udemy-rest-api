@@ -5,7 +5,6 @@ from rest_framework.test import APIClient
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-import redis
 from redis import ConnectionError
 
 HEALTH_CHECK_URL = reverse('api:api-healthcheck')
@@ -26,7 +25,7 @@ class HealthCheckApiTest(TestCase):
         self.assertRegex(res.data['datetime'], DATE_REGEX)
 
     @patch('redis.StrictRedis.get', side_effect=[ConnectionError])
-    def test_health_check_component_failed(self, redis):
+    def test_health_check_component_failed(self):
 
         res = self.client.get(HEALTH_CHECK_URL)
 

@@ -7,6 +7,7 @@ from django.core.management import call_command
 import logging
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     # Django command to start the server from PyCharm
     def add_arguments(self, parser):

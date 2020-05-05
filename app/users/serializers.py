@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model, password_validation
-from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 
 import logging
 logger = logging.getLogger(__name__)
+
 
 class UserSerializer(serializers.ModelSerializer):
     # Serializer for the users object
@@ -46,8 +46,3 @@ class AuthTokenSerializer(serializers.Serializer):
     # Serializer for the users users object
     email = serializers.CharField()
     password = serializers.CharField(style={'input_type': 'password'})
-
-    def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
-
