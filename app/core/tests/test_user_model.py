@@ -1,17 +1,19 @@
 import django.test
 from core.models import User
 
+
 def sample_user(username='testuser', password='Mypw-0123-ab#!', email='hello@mydomain.com'):
     # create a sample user
     return User.objects.create_user(username=username, email=email, password=password)
+
 
 class UserModelTestCase(django.test.TestCase):
 
     def test_create_user_successful(self):
         # Test creating a new users with email is successful
-        username='testuser'
-        password='Mypw-0123-ab#!'
-        email='hello@mydomain.com'
+        username = 'testuser'
+        password = 'Mypw-0123-ab#!'
+        email = 'hello@mydomain.com'
 
         user = sample_user(username=username, password=password, email=email)
 
