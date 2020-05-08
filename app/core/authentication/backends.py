@@ -29,8 +29,10 @@ class LdapAuthenticationBackend(BaseBackend):
         except User.DoesNotExist:
             user = User.objects.create_user(
                 username=username,
-                email=email,
-                password=password)
+                email=email)
+
+            # Mark the user as having no password set as authentication was done against LDAP
+            user.set_unusable_password()
         return user
 
     def get_user(self, user_id):

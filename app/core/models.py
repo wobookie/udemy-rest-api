@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, \
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, username, email=None, password=None, **extra_fields):
-        """Creates and saves a new users"""
+        """Creates and saves a new user"""
         if not username:
             raise ValueError('Users must have user name')
 
@@ -30,6 +30,7 @@ class CustomUserManager(BaseUserManager):
         return user
 
 
+# Django Account for humans
 class User(AbstractBaseUser, PermissionsMixin):
 
     username = models.CharField(max_length=255, unique=True)

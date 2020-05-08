@@ -30,13 +30,19 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    # Django Apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-Party Apps
     'rest_framework',
+    'rest_framework.authentication',
+    
+    # Local Apps (the project apps)
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
@@ -151,6 +157,14 @@ REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = os.environ.get('REDIS_PORT')
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
 
+# Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+
 # Simple JWT’s behavior
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
@@ -231,7 +245,7 @@ if os.environ.get('ENVIRONMENT') != 'TRAVIS':
             },
             'unit-test': {
                 'level': LOGLEVEL,
-                'handlers': ['console'],
+                'handlers': ['file'],
                 # required to avoid double logging with root logger
                 'propagate': False,
             },
