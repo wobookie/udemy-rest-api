@@ -1,4 +1,4 @@
-"""app URL Configuration
+"""naupy URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -13,17 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import re_path, path, include
-from .views import index
+from django.urls import path
+from .views import login, home
+from .settings.views import tokens
 
+app_name = 'web'
 
 urlpatterns = [
-    path('', index, name='index'),
-    re_path(r'^web/', include('web.urls', namespace='web')),
-    re_path(r'^api/', include('api.urls', namespace='api')),
-    path('admin/', admin.site.urls),
+    path('login/', login, name='login'),
+    path('home/', home, name='home'),
+    path('settings/tokens/', tokens, name='tokens'),
 ]
-
-# custom handle of 404 server error
-handler404 = 'web.views.handler_404'

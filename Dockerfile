@@ -1,11 +1,13 @@
 FROM centos:8
 
-# Exose ports for Django, Redis and PostgreSQL
-EXPOSE ${APP_PORT} ${REDIS_PORT} ${DATABASE_PORT}
+# Read Arguments Required for the image build
+ARG APP_DIR
+ARG DJANGO_HOME
 
 # Set environment for Python
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONIOENCODING utf-8
+ENV DJANGO_HOME=${DJANGO_HOME}
 
 # Install Python3, Postgres Client 10 and Redis 5
 RUN dnf -y install python3
@@ -20,6 +22,13 @@ RUN dnf -y install sudo openldap-clients \
 
 # Install application dependencies
 COPY ./requirements.txt requirements.txt
+
+# Upgrade PIP to latest version
+RUN pip3 install --upgrade pip
+
+# Install Gunicorn
+RUN pip3 install --upgrade gunicorn
+
 RUN pip3 install -r requirements.txt && \
     rm requirements.txt
 
@@ -39,21 +48,20 @@ RUN useradd -ms /bin/bash nautilus && \
     echo 'nautilus ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 # Create directory structure for the web app
-RUN mkdir -p /opt/nautilus/web-app/logs
-RUN mkdir -p /opt/nautilus/web-app/www/static
-COPY ./startserver.sh /opt/nautilus/web-app/startserver.sh
-COPY ./app /opt/nautilus/web-app
+RUN mkdir -p ${APP_DIR}
+RUN mkdir -p ${DJANGO_HOME}/logs
+RUN mkdir -p ${DJANGO_HOME}/www/static
+COPY ./naupy ${DJANGO_HOME}
+
 # Make startserver.sh runable
-RUN chown -R nautilus:nautilus /opt/nautilus
+RUN chown -R nautilus:nautilus ${APP_DIR}
 
 # Workaround to start server - docker can't handle non-root directory as cmd entry points
-COPY ./startserver.sh /startserver.sh
+COPY ./naupy/bin/startserver.sh /startserver.sh
 RUN chmod +x /startserver.sh
 
 # Set User to nautilus
 USER nautilus
 
 # Set the work directory
-WORKDIR /opt/nautilus/web-app
-RUN chmod +x ./startserver.sh
-RUN touch /opt/nautilus/web-app/logs/debug.log
+WORKDIR ${DJANGO_HOME}

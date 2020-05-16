@@ -9,17 +9,21 @@ services:
     user: ${APP_USER}
     build:
       context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_DIR=${APP_DIR}
+        - DJANGO_HOME=${DJANGO_HOME}
     ports:
       - "${APP_PORT}:${APP_PORT}"
     expose:
       - "${APP_PORT}"
     volumes:
-      - ./app:/opt/nautilus/web-app
-      - ./app/logs:/opt/nautilus/web-app/logs
+      - ./app:${DJANGO_HOME}
+      - ./app/logs:${DJANGO_HOME}/logs
     command:
       - /startserver.sh
     environment:
-      - APP_ADRPORT=0:${APP_PORT}
+      - APP_ADRPORT=${APP_ADRPORT}
       - ENVIRONMENT=${ENVIRONMENT}
       - DB_HOST=db
       - DB_NAME=${DATABASE_NAME}
@@ -32,6 +36,7 @@ services:
       - DJANGO_SUPERUSER_NAME=${DJANGO_SUPERUSER_NAME}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_HOME=${DJANGO_HOME}
       - JUMPCLOUD_URL=${JUMPCLOUD_URL}
       - JUMPCLOUD_OID=${JUMPCLOUD_OID}
       - JUMPCLOUD_DN=${JUMPCLOUD_DN}
