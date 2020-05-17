@@ -6,24 +6,28 @@ networks:
 
 services:
   app:
-    user: ${APP_USER}
+    user: ${APP_USER_NAME}
     build:
       context: .
       dockerfile: Dockerfile
       args:
         - APP_DIR=${APP_DIR}
         - DJANGO_HOME=${DJANGO_HOME}
+        - APP_USER_NAME=${APP_USER_NAME}
+        - APP_USER_ID=${APP_USER_ID}
+        - APP_USER_PWD=${APP_USER_PWD}
     ports:
-      - "${APP_PORT}:${APP_PORT}"
+      - "${NGINX_PORT}:${NGINX_PORT}"
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
     expose:
-      - "${APP_PORT}"
+      - ${NGINX_PORT}
+      - ${DJANGO_PORT}
     volumes:
       - ./app:${DJANGO_HOME}
       - ./app/logs:${DJANGO_HOME}/logs
     command:
       - /startserver.sh
     environment:
-      - APP_ADRPORT=${APP_ADRPORT}
       - ENVIRONMENT=${ENVIRONMENT}
       - DB_HOST=db
       - DB_NAME=${DATABASE_NAME}
@@ -37,6 +41,9 @@ services:
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_HOME=${DJANGO_HOME}
+      - DJANGO_ADRPORT=${DJANGO_ADRPORT}
+      - DJANGO_PORT=${DJANGO_PORT}
+      - NGINX_PORT=${NGINX_PORT}
       - JUMPCLOUD_URL=${JUMPCLOUD_URL}
       - JUMPCLOUD_OID=${JUMPCLOUD_OID}
       - JUMPCLOUD_DN=${JUMPCLOUD_DN}

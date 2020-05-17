@@ -3,6 +3,9 @@ FROM centos:8
 # Read Arguments Required for the image build
 ARG APP_DIR
 ARG DJANGO_HOME
+ARG APP_USER_NAME
+ARG APP_USER_ID
+ARG APP_USER_PASSWORD
 
 # Set environment for Python
 ENV PYTHONUNBUFFERED 1
@@ -17,7 +20,7 @@ RUN dnf -y install redis
 # Add some useful utilities and build dependencies
 # required to install Python PostgreSQL driver (Psycopg2)
 # These are temporary dependencies and removed after requirements installed
-RUN dnf -y install sudo openldap-clients \
+RUN dnf -y install sudo passwd openldap-clients \
     gcc postgresql-devel python3-devel
 
 # Install application dependencies
@@ -43,9 +46,12 @@ RUN alternatives --set python /usr/bin/python3
 
 # Add an user under which the application should run
 # and grant him sudo permissions
-RUN useradd -ms /bin/bash nautilus && \
-    usermod -aG wheel,nautilus nautilus && \
-    echo 'nautilus ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+# and set a password
+RUN useradd -ms /bin/bash -u ${APP_USER_ID} ${APP_USER_NAME} && \
+    echo -e ${APP_USER_PASSWORD}'\n'${APP_USER_PASSWORD} | passwd ${APP_USER_NAME} && \
+    usermod -aG wheel,${APP_USER_NAME} ${APP_USER_NAME} && \
+    echo ${APP_USER_NAME}' ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
 
 # Create directory structure for the web app
 RUN mkdir -p ${APP_DIR}
@@ -61,7 +67,7 @@ COPY ./naupy/bin/startserver.sh /startserver.sh
 RUN chmod +x /startserver.sh
 
 # Set User to nautilus
-USER nautilus
+# USER nautilus
 
 # Set the work directory
-WORKDIR ${DJANGO_HOME}
+# WORKDIR ${DJANGO_HOME}
