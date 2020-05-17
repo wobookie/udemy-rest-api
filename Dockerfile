@@ -12,10 +12,22 @@ ENV PYTHONUNBUFFERED 1
 ENV PYTHONIOENCODING utf-8
 ENV DJANGO_HOME=${DJANGO_HOME}
 
-# Install Python3, Postgres Client 10 and Redis 5
+# Install Python3, Postgres Client 10, Redis 5
 RUN dnf -y install python3
 RUN dnf -y install postgresql
 RUN dnf -y install redis
+
+# Install Nginx web server and set ownership to related directories
+RUN dnf -y install nginx
+RUN mkdir -p /var/cache/nginx /var/run/nginx
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+RUN chown -R nginx:nginx /etc/nginx && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /var/run/nginx && \
+    chown -R nginx:nginx /var/lib/nginx && \
+    chown -R nginx:nginx /usr/share/nginx
+RUN chmod g+w /var/run/nginx
 
 # Add some useful utilities and build dependencies
 # required to install Python PostgreSQL driver (Psycopg2)
@@ -45,18 +57,19 @@ RUN dnf -y remove gcc postgresql-devel python3-devel && \
 RUN alternatives --set python /usr/bin/python3
 
 # Add an user under which the application should run
-# and grant him sudo permissions
-# and set a password
+# set a password for that user
+# and grant sudo permissions to start / stop nginx
 RUN useradd -ms /bin/bash -u ${APP_USER_ID} ${APP_USER_NAME} && \
-    echo -e ${APP_USER_PASSWORD}'\n'${APP_USER_PASSWORD} | passwd ${APP_USER_NAME} && \
-    usermod -aG wheel,${APP_USER_NAME} ${APP_USER_NAME} && \
-    echo ${APP_USER_NAME}' ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+    echo -e ${APP_USER_PASSWORD}'\n'${APP_USER_PASSWORD} | passwd ${APP_USER_NAME}
 
+# Add application user to Nginx group
+RUN usermod -a -G nginx ${APP_USER_NAME}
 
 # Create directory structure for the web app
 RUN mkdir -p ${APP_DIR}
 RUN mkdir -p ${DJANGO_HOME}/logs
-RUN mkdir -p ${DJANGO_HOME}/www/static
+
+# Copy application
 COPY ./naupy ${DJANGO_HOME}
 
 # Make startserver.sh runable
@@ -67,7 +80,7 @@ COPY ./naupy/bin/startserver.sh /startserver.sh
 RUN chmod +x /startserver.sh
 
 # Set User to nautilus
-# USER nautilus
+USER ${APP_USER_NAME}
 
 # Set the work directory
-# WORKDIR ${DJANGO_HOME}
+WORKDIR ${DJANGO_HOME}

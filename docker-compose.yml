@@ -15,7 +15,7 @@ services:
         - DJANGO_HOME=${DJANGO_HOME}
         - APP_USER_NAME=${APP_USER_NAME}
         - APP_USER_ID=${APP_USER_ID}
-        - APP_USER_PWD=${APP_USER_PWD}
+        - APP_USER_PASSWORD=${APP_USER_PASSWORD}
     ports:
       - "${NGINX_PORT}:${NGINX_PORT}"
       - "${DJANGO_PORT}:${DJANGO_PORT}"
@@ -23,8 +23,8 @@ services:
       - ${NGINX_PORT}
       - ${DJANGO_PORT}
     volumes:
-      - ./app:${DJANGO_HOME}
-      - ./app/logs:${DJANGO_HOME}/logs
+      - ./naupy:${DJANGO_HOME}
+      - ./naupy/logs:${DJANGO_HOME}/logs
     command:
       - /startserver.sh
     environment:
@@ -43,6 +43,7 @@ services:
       - DJANGO_HOME=${DJANGO_HOME}
       - DJANGO_ADRPORT=${DJANGO_ADRPORT}
       - DJANGO_PORT=${DJANGO_PORT}
+      - DJANGO_WSGI_MODULE=${DJANGO_WSGI_MODULE}
       - NGINX_PORT=${NGINX_PORT}
       - JUMPCLOUD_URL=${JUMPCLOUD_URL}
       - JUMPCLOUD_OID=${JUMPCLOUD_OID}

@@ -147,10 +147,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # This is needed for a production deployment - static files need to be
 # served through a web server.
-STATIC_ROOT = os.path.join(BASE_DIR, 'www/static')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+# STATIC_ROOT = os.path.join(BASE_DIR, '/static')
+# STATICFILES_DIRS = [
+#    os.path.join(BASE_DIR, 'static'),
+#    '/usr/local/lib/python3.6/site-packages/django/contrib/admin/static',
+# ]
 
 # Redis configuration
 REDIS_HOST = os.environ.get('REDIS_HOST')
@@ -209,7 +210,7 @@ if os.environ.get('ENVIRONMENT') != 'TRAVIS':
             'file': {
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
-                'filename': 'naupy/logs/debug.log',
+                'filename': 'logs/debug.log',
                 'formatter': 'verbose'
             },
             'console': {
@@ -221,11 +222,17 @@ if os.environ.get('ENVIRONMENT') != 'TRAVIS':
         },
         'loggers': {
             # root logger
-            '': {
+            'root': {
                 'level': 'WARNING',
                 'handlers': ['console'],
             },
             'core': {
+                'level': LOGLEVEL,
+                'handlers': ['console', 'file'],
+                # required to avoid double logging with root logger
+                'propagate': False,
+            },
+            'app': {
                 'level': LOGLEVEL,
                 'handlers': ['console', 'file'],
                 # required to avoid double logging with root logger
