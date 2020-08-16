@@ -21,9 +21,9 @@ from .users import views
 app_name = 'api'
 
 users_api_patterns = ([
-    path('create/', views.CreateUserView,  name='create'),
-    path('token_obtain/', views.CreateTokenView,  name='token_obtain'),
-    path('token_refresh/', views.CreateTokenView, name='token_refresh'),
+    path('create/', views.CreateUserView.as_view(),  name='create'),
+    path('token_obtain/', views.CreateTokenView.as_view(),  name='token_obtain'),
+    path('token_refresh/', views.CreateTokenView.as_view(), name='token_refresh'),
 ], 'users')
 
 urlpatterns = [

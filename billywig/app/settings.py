@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # Third-Party Apps
     'rest_framework',
     'rest_framework.authentication',
+    'rest_framework.authtoken',
 
     # Local Apps (the project apps)
     'core.apps.CoreConfig',
@@ -162,8 +163,7 @@ LOGGING = {
 # Django Rest Framework - Default Renderers
 # https://www.django-rest-framework.org/api-guide/renderers/
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ]
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+    )
 }
