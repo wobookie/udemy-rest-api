@@ -129,4 +129,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-/naupy/static/admin/
+
+# Project specifics
+logs/
+*.log
+/Pipfile.lock
+/Pipfile

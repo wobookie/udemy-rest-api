@@ -6,73 +6,45 @@ networks:
 
 services:
   app:
-    user: ${APP_USER_NAME}
+    user: ${DJANGO_USER}
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - APP_DIR=${APP_DIR}
         - DJANGO_HOME=${DJANGO_HOME}
-        - APP_USER_NAME=${APP_USER_NAME}
-        - APP_USER_ID=${APP_USER_ID}
-        - APP_USER_PASSWORD=${APP_USER_PASSWORD}
+        - DJANGO_USER=${DJANGO_USER}
     ports:
-      - "${NGINX_PORT}:${NGINX_PORT}"
       - "${DJANGO_PORT}:${DJANGO_PORT}"
     expose:
-      - ${NGINX_PORT}
       - ${DJANGO_PORT}
     volumes:
-      - ./naupy:${DJANGO_HOME}
-      - ./naupy/logs:${DJANGO_HOME}/logs
+      - ./billywig/logs:${DJANGO_HOME}/logs
     command:
-      - /startserver.sh
+      - /bin/sh -c "$DJANGO_HOME/bin/startserver.sh"
     environment:
       - ENVIRONMENT=${ENVIRONMENT}
-      - DB_HOST=db
-      - DB_NAME=${DATABASE_NAME}
-      - DB_USER=${DATABASE_ADMIN_USER}
-      - DB_PASSWORD=${DATABASE_ADMIN_PASSWD}
-      - DB_PORT=${DATABASE_PORT}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT}
+      - DATABASE_SERVICE=postgres_db
+      - DATABASE_NAME=${POSTGRES_DEFAULT_DB}
+      - DATABASE_USER=${POSTGRES_ADMIN_USER}
+      - DATABASE_USER_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
+      - DATABASE_PORT=${POSTGRES_PORT}
       - DJANGO_SUPERUSER_NAME=${DJANGO_SUPERUSER_NAME}
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_HOME=${DJANGO_HOME}
-      - DJANGO_ADRPORT=${DJANGO_ADRPORT}
       - DJANGO_PORT=${DJANGO_PORT}
-      - DJANGO_WSGI_MODULE=${DJANGO_WSGI_MODULE}
-      - NGINX_PORT=${NGINX_PORT}
-      - JUMPCLOUD_URL=${JUMPCLOUD_URL}
-      - JUMPCLOUD_OID=${JUMPCLOUD_OID}
-      - JUMPCLOUD_DN=${JUMPCLOUD_DN}
     depends_on:
-      - db
-      - redis
+      - postgres_db
     networks:
       - app-tier
 
-  db:
-    image: "postgres:10"
+  postgres_db:
+    image: "postgres:12.3"
     restart: always
     environment:
-      - POSTGRES_DB=${DATABASE_NAME}
-      - POSTGRES_USER=${DATABASE_ADMIN_USER}
-      - POSTGRES_PASSWORD=${DATABASE_ADMIN_PASSWD}
-      - POSTGRES_PORT=${DATABASE_PORT}
-    networks:
-      - app-tier
-
-  redis:
-    image: "redis:5"
-    ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
-    environment:
-      - REDIS_REPLICATION_MODE=master
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    command: redis-server --requirepass ${REDIS_PASSWORD}
-    restart: always
+      - POSTGRES_DB=${POSTGRES_DEFAULT_DB}
+      - POSTGRES_USER=${POSTGRES_ADMIN_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_ADMIN_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     networks:
       - app-tier

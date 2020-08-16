@@ -1,9 +1,0 @@
-# deploy an ingress resources for a service jenkins on google kubernetes engine
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: basic-ingress
-spec:
-  backend:
-    serviceName: jenkins
-    servicePort: 8080
